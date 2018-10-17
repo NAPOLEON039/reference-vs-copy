@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>JS Reference VS Copy</title>
+</head>
+<body>
+
+  <script>
+    // start with strings, numbers and booleans
+
+    // let age = 19;
+    // let age2 = age;
+    // console.log(age, age2);
+    
+    // age = 20;
+    // console.log(age, age2);
+
+    //the change in the original value doesn't affect the other because it is a copy not a reference
+
+    //the same thing happens with strings
+    // let name = 'Satoru';
+    // let name2 = name;
+    // console.log(name, name2);
+
+    // name = 'Rimuru';
+    // console.log(name, name2);
+
+    // Let's say we have an array
+    const players = ['Wes', 'Sarah', 'Ryan', 'Poppy'];
+
+    // and we want to make a copy of it.
+    const team = players;
+    
+    
+    // You might think we can just do something like this:
+    
+    // however what happens when we update that array?
+    // players[3] = 'Agil';
+    
+    // now here is the problem!
+    
+    // oh no - we have edited the original array too!
+    
+    // Why? It's because that is an array reference, not an array copy. They both point to the same array! And it goes both ways. Make changes to any array and it will
+    //eventually go back to the original reference
+    
+    // So, how do we fix this? We take a copy instead!
+    
+    // one way
+    const team2 = players.slice();
+    console.log(team2, players);
+    //if we pass index positions to slice, it will return a part of the array. If we don't pass it anything, it will give us a COPY of the original NOT a reference
+
+    // or create a new array and concat the old one in
+    const team3 = [].concat(players);
+
+    // or use the new ES6 Spread
+    const team4 = [...players];
+    //all the items in the iterable "players" wll be spread into the container which is an array
+
+    //another way of doing the same thing is
+    const team5 = Array.from(players);
+    //Aray.prototype.from converts any iterable to an array.
+
+    // now when we update it, the original one isn't changed
+    team5[3] = 'Agil';
+
+    // The same thing goes for objects, let's say we have a person object
+
+    // with Objects
+    const person = {
+      name: 'Wes Bos',
+      age: 80
+    };
+
+    // and think we make a copy:
+    const captain = person;
+    // captain.number = 1000; //added new property to captain
+    console.log(captain, person);
+
+    //the new property has also been added to the original object since we have taken a reference to that object and not a copy
+
+    // how do we take a copy instead?
+    console.clear();
+    const cap2 = Object.assign({}, person, { number: 15 });
+    console.log(cap2);
+    //Object.prototype.assign takes a target object and the arguments following that are the new properties or changes to existing ones.
+
+    // We will hopefully soon see the object ...spread
+    const cap3 = {...person};
+
+    //It's here✨ ALL HAIL THE OBJECT SPREAD!!!🙌
+
+    // Things to note - this is only 1 level deep - both for Arrays and Objects. lodash has a cloneDeep method, but you should think twice before using it.
+
+    const personalInfo = {
+      name: 'Nihar',
+      age: 19,
+      social: {
+        twitter: '@NAPOLEON_COC',
+        instagram: 'napoleonraiden'
+      }
+    }
+
+    const personal1 = Object.assign({}, personalInfo);
+
+    //On the outside this creates a seemingly good enough copy of the original object. But, it doesn't do that well of a job with the nested object.
+    //Even the mighty Object spread can't help here 😥
+    //The cloneDeep method is risky to use
+
+    //Wes calls this the poor man's cloneDeep.
+    const personal2 = JSON.parse(JSON.stringify(personalInfo));
+
+    //It's a quick and easy way to clone an object upto the deeper layers. However it may have performance issues since the original object is first converted to a string
+    //and then it is parsed back into an object. It's then no longer a reference and becomes a proper copy.
+
+  </script>
+
+</body>
+</html>
